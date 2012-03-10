@@ -7,7 +7,12 @@ class MoviesController < ApplicationController
   end
 
   def index
+    if params['sort']
+    @movies = Movie.all(:order => params['sort'])
+    flash[:sort]=params['sort']
+    else
     @movies = Movie.all
+    end
   end
 
   def new
@@ -15,6 +20,7 @@ class MoviesController < ApplicationController
   end
 
   def create
+    #debugger
     @movie = Movie.create!(params[:movie])
     flash[:notice] = "#{@movie.title} was successfully created."
     redirect_to movies_path

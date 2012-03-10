@@ -53,9 +53,17 @@ table#movies th, table#movies td {
   margin: 1em 0;
   padding: 4px;
 }
+#notice #message{
+  background: yellow;
+  margin: 1em 0;
+  padding: 4px;
+}
 form label {
   display: block;
   line-height: 25px;
   font-weight: bold;
   color: maroon;
+}
+table#movies th.hilite {
+  background-color:yellow;
 }
