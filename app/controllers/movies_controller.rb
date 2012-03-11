@@ -8,20 +8,16 @@ class MoviesController < ApplicationController
 
   def index
     @checked_ratings = {}
+    @sort_order = params[:sort]
     @all_ratings =Movie.all_ratings
+    chk_r = @all_ratings
     if params[:ratings]
       chk_r = params[:ratings].keys
       @checked_ratings = params[:ratings]
-    else
-      chk_r = Movie.all_ratings
     end
     
-    if params['sort']
-      @movies = Movie.find_all_by_rating(chk_r,:order => params['sort'])
-      flash[:sort]=params['sort']
-    else
-      @movies = Movie.find_all_by_rating(chk_r)
-    end
+      @movies = Movie.find_all_by_rating(chk_r, :order => @sort_order)
+      flash[:sort]=params[:sort]
   end
 
   def new
