@@ -7,14 +7,41 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @checked_ratings = {}
-    @sort_order = params[:sort]
     @all_ratings =Movie.all_ratings
+    @checked_ratings = {}
+    @sort_order= nil
+    do_redirect = false;
+    # check if we have values in the session that are missing from params
+    params_to_check = [:ratings , :sort] 
+    params_values = {:ratings => @all_ratings , :sort => @sort_order} 
+    params_to_check.each do |param|
+      if params.has_key?(param)
+        session[param] = params[param]
+      elsif session.has_key?(param)
+          p = session[param]
+          unless p.length == 0 
+            params[param] = session[param]
+            do_redirect = true
+          end
+      end
+    end
+    if do_redirect
+      s = params[:sort]
+      r = params[:ratings]
+      redirect_to movies_path({:sort => params[:sort],:ratings => params[:ratings]} )
+    end
+    if params[:sort]
+      @sort_order = params[:sort]
+    end
     chk_r = @all_ratings
     if params[:ratings]
       chk_r = params[:ratings].keys
       @checked_ratings = params[:ratings]
     end
+
+    # Store the values in the session
+    session[:sort] = @sort_order
+    session[:ratings] = @checked_ratings
     
       @movies = Movie.find_all_by_rating(chk_r, :order => @sort_order)
       flash[:sort]=params[:sort]
